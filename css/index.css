@@ -1,0 +1,27 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+ul,li{
+    list-style: none;
+}
+.center{
+    width: 600px;
+    margin: 100px auto;
+}
+li{
+    display: block;
+    overflow: hidden;
+}
+li input{
+    border: 1px solid #cfcfcf;
+    height: 28px;
+    padding:0 10px;
+    cursor: pointer;
+}
+li .msg{
+    height: 26px;
+    color: #464646;
+    font-size:12px;
+    line-height: 26px;
+}
