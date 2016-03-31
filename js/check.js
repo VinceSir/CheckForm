@@ -5,24 +5,54 @@
 $(function () {
     $('from').check([
         {
-            'name': 'passwd',
-            'type':'ruquery',
-            'msg':''
+            'name': 'uname',
+            'check':{
+                1:{
+                    type:'required',
+                    msg:'昵称不能为空'
+                }
+            }
         },
         {
             'name': 'passwd',
-            'type':{
+            'check':{
                 1:{
-                    type:'x',
-                    mes:''
+                    type:'required',
+                    msg:'密码不能为空'
                 },
+                2:{
+                    type:'passwd',
+                    msg:'请正确输入密码'
+                }
+            }
+        },
+        {
+            'name': 'upasswd',
+            'check':{
                 1:{
-                    type:'x',
-                    mes:''
+                    type:'required',
+                    msg:'密码不能为空'
                 },
+                2:{
+                    type:'passwd',
+                    msg:'请正确输入密码'
+                },
+                3:{
+                    type:'upasswd',
+                    msg:'两次密码输入不一直'
+                }
+            }
+        },
+        {
+            'name': 'email',
+            'check':{
                 1:{
-                    type:'x',
-                    mes:''
+                    type:'required',
+                    msg:'请填写邮箱'
+                },
+                2:{
+                    type:'email',
+                    msg:'请正确输入邮箱'
                 }
             }
         }
@@ -31,44 +61,70 @@ $(function () {
 
 (function ($) {
     $.fn.check=function(list){
-        var checkName ='';
-        $.each(list,function (i,v){
-            comparison(i);
-        })
-        function comparison(name) {
-            $.each();
-        }
+        $.each(list,function (i,v) {
+            var $n = '';
+            $n = v.name;
 
+            $.each(v.check,function(index,val){
+                var $type = '',
+                    $msg = '';
+                $type = val.type;
+                $msg = val.msg;
 
+                $("input[name='"+$n+"']").focus(function(){
+                    
+                });
+                //离开焦点触发验证
+                $("input[name='"+$n+"']").blur(function(){
+                    obtainCheck($n,$type,$msg);
+                });
 
-        /*
-        * 报错
-        * id:返回验证id
-        * msg:返回验证文本
-        * */
-        function error(id,msg){
-            var _id = $("input[name='"+id+"']");
-            var sibid = _id.parent().siblings('.msg');
-            _id.css({
-                'border':theme.error.border,
-                'color':theme.error.color
             })
-            if(sibid.html(msg)){
-                console.log(1)
+
+        });
+
+        function obtainCheck(checkName,checkType,checkMsg){
+            var active;
+            if(checkType == 'required'){
+                var el = $("input[name = '"+ checkName +"']"),
+                    val = el.val();
+                active = require(val);
+                if (active == false){
+                    error(el,checkMsg);
+                }else{
+                    promptFun(el);
+                }
+            }else if( checkType == 'upasswd'){
+                var el = $("input[name = '"+ checkName +"']"),
+                    pass = $("input[name = 'passwd']").val();
+                    val = el.val();
+                active = upasswd(pass,val);
+                if (active == false){
+                    error(el,checkMsg);
+                }else{
+                    promptFun(el);
+                }
             }else{
-                console.log(2)
+                if(checkName == 'upasswd'){
+                    checkName = 'passwd';
+                }
+                var el = $("input[name = '"+ checkName +"']"),
+                    regularTest = regular[checkName];
+                active = checkFunction(checkName,regularTest);
+                if( active == false){
+                    error(el,checkMsg);
+                }else{
+                    promptFun(el);
+                }
             }
-            sibid.css({
-                'color':theme.error.color
-            });
         }
+
         /*
         * 非空验证
         * 验证id
         * */
         function require(el) {
-            var v =  $(el).val();
-            if(v == null || c == ''){
+            if(el == null || el == ''){
                 return false;
             }
         }
@@ -90,13 +146,36 @@ $(function () {
         * upasswd:验证密码狂id
         * */
         function upasswd(passwd,upasswd){
-            var $passwd = passwd.val(),
-                $upasswd = upasswd.val();
-            if($passwd != $upasswd){
+            if(passwd != upasswd){
                 return false;
             }
         }
+        /*
+         * 报错
+         * id:返回验证id
+         * msg:返回验证文本
+         * */
         
+        function promptFun(id) {
+            var sibid = id.parent().siblings('.msg');
+            id.removeAttr('style');
+            id.css({
+                'border':theme.correct.border,
+            })
+            sibid.removeAttr('style').text('')
+        }
+        
+        
+        function error(id,msg){
+            var sibid = id.parent().siblings('.msg');
+            id.css({
+                'border':theme.error.border,
+                'color':theme.error.color
+            })
+            sibid.text(msg).css({
+                'color':theme.error.color
+            });
+        }
 
         var regular = {
             'email':  /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
@@ -108,7 +187,7 @@ $(function () {
             'double':/^[-\+]?\d+(\.\d+)?$/,
             'english':/^[A-Za-z]+$/,
             'mobile':/^0?(1[3587][0-9]|14[57])[0-9]{8}$/,
-            'passwd':/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
+            'passwd':/[a-zA-Z0-9]{6,16}/,
             'integer_nozero':/^[1-9]\d*$/,
             'price':/^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/,
             'phone':/^(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$/,
