@@ -1,38 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>校验</title>
-    <link rel="stylesheet" href="css/index.css">
-    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
-
+<meta charset="UTF-8">
+<title>校验</title>
+<link rel="stylesheet" href="css/index.css">
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/formValidate.js"></script>
 </head>
 <body>
 <div class="center">
-    <from>
-        <ul>
-            <li>
-                <div><input class="in_name cnm" name="uname" type="text"></div>
-                <div class="msg msg_uname"></div>
-            </li>
-            <li>
-                <div><input class="in_password" name="passwd" type="password"></div>
-                <div class="msg msg_pass"></div>
-            </li>
-            <li>
-                <div><input class="in_upasswd" name="upasswd" type="password"></div>
-                <div class="msg msg_upasswd"></div>
-            </li>
-            <li>
-                <div><input class="in_email" name="email" type="text"></div>
-                <div class="msg msg_email"></div>
-            </li>
-            <li>
-                <button class="submit" type="submit">提交</button>
-            </li>
-        </ul>
-    </from>
+	<form action="" method="post">
+    <ul>
+      <li>
+        <div>
+          <input class="in_name cnm" name="uname" placeholder="请输入昵称" type="text">
+        </div>
+        <div class="msg"></div>
+      </li>
+      <li>
+        <div>
+          <input class="in_password" name="passwd" placeholder="请输入密码" type="text">
+        </div>
+        <div class="msg"></div>
+      </li>
+      <li>
+        <div>
+          <input class="in_upasswd" name="upasswd" placeholder="请输入确认密码" type="text">
+        </div>
+        <div class="msg"></div>
+      </li>
+      <li>
+        <div>
+          <input class="in_email" name="email" placeholder="请输入邮箱" type="text">
+        </div>
+        <div class="msg"></div>
+      </li>
+      <li>
+        <button class="submit" type="submit">提交</button>
+      </li>
+    </ul>
+  </form>
 </div>
-<script src="js/check.js"></script>
+<script type="text/javascript">
+
+$(function()
+{
+	$('form').formValidate({
+		uname:[
+			{type:"required",msg:"昵称不能为空"}
+		],
+		passwd:[
+			{type:"required",msg:"密码不能为空"},
+			{type:"passwd",msg:"请正确输入密码"}
+		],
+		upasswd:[
+			{type:"required",msg:"密码不能为空"},
+			{type:"passwd",msg:"请正确输入密码"},
+			{type:"upasswd",msg:"两次密码不一致"}
+		],
+		email:[
+			{type:"required",msg:"密码不能为空"},
+			{type:"email",msg:"请正确输入密码"}
+		]
+	});
+})
+</script>
 </body>
 </html>
