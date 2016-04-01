@@ -37,6 +37,12 @@
 							break;
 						}
 					}
+					if(obj[i].type == 'function'){
+						if(!eval(obj[i].rule+"()")){
+							_error(formName,obj[i].msg);
+							break;
+						}
+					}
 				}else{
 					eval("var regularName = regular."+obj[i].rule);
 						if(!regularName.test($(this).val())){

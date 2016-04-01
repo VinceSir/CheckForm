@@ -59,9 +59,15 @@ $(function(){
 		],
 		email:[
 			{rule:"required",msg:"邮箱不能为空"},
-			{rule:"email",msg:"请正确输入密码"}
+			{rule:"email",msg:"请正确输入密码"},
+            {rule:"alert",type:'function'}
 		]
 	});
+
+    function alert(){
+        console.log(true);
+        return true;
+    }
 })
 </script>
 </body>
