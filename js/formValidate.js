@@ -84,8 +84,7 @@
 		});
 		$(this).find('input').focus(function(){
 			var placeholder = $(this).attr('placeholder');
-			
-			$(this).parents('li').find('.msg').text(placeholder);
+			$(this).parent().siblings('.msg').removeAttr('style').text(placeholder);
 		})
 		
 		$(this).submit(function(){
