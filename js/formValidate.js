@@ -1,8 +1,6 @@
 // JavaScript Document
-(function($)
-{
-	$.fn.inputValidate = function(obj)
-	{
+(function($){
+	$.fn.inputValidate = function(obj){
 		var regular = {
 			'email':  /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
 			'url':  /^http(s?):\/\/(?:[A-za-z0-9-]+\.)+[A-za-z]{2,4}(:\d+)?(?:[\/\?#][\/=\?%\-&~`@[\]\':+!\.#\w]*)?$/,
@@ -21,84 +19,61 @@
 			'idcard':/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
 			'bank_card':/^(\d{16}|\d{19})$/,
 		};
-		
 		var formName = $(this).attr('name');
-		
-		if(obj)
-		{
-			
-			for(var i=0; i<obj.length;i++)
-			{
+		if(obj){
+			for(var i=0; i<obj.length;i++){
 				error = true;
-				if(obj[i].type=='required')
-				{
-					if(!$(this).val())
-					{
+				if(obj[i].rule=='required'){
+					if(!$(this).val()){
 						_error(formName,obj[i].msg);
 						break;
 					}
-				}
-				else
-				{
-					eval("var regularName = regular."+obj[i].type);
-					if(!regularName)
-					{
-						if(!eval(obj[i].type+"()"))
-						{
+				}else if(obj[i].type){
+					if(obj[i].type == 'contrast'){
+						var active = '';
+						active = contrast(formName,obj[i].rule);
+						if(!active){
 							_error(formName,obj[i].msg);
 							break;
 						}
 					}
-					else
-					{
+				}else{
+					eval("var regularName = regular."+obj[i].rule);
 						if(!regularName.test($(this).val())){
 							_error(formName,obj[i].msg);
 							break;
 						}
-					}
+
 				}
 			}
 		}
-		
-		function upasswd()
-		{
-			if($('input[name=passwd]').val()!=$('input[name=upasswd]').val())
-			{
-				return false;	
-			}
-			else
-			{
+		//对比两个对象的的值是否相同
+		function contrast(a,b){
+			if($('input[name='+ a +']').val()!=$('input[name='+ b +']').val()){
+				return false;
+			}else{
 				return true;
 			}
-			
 		}
-		
-		function _error(formNmae,msg)
-		{
+
+		function _error(formNmae,msg){
 			error = false;
-			$('input[name='+formNmae+']').parents('li').find('.msg').text(msg);
+			$('input[name='+formNmae+']').parent().siblings('.msg').text(msg).css({'color':'#ff0000'});
 		}
-		
-		if(error)
-		{
-			$('input[name='+formName+']').parents('li').find('.msg').text('');	
+		if(error){
+			$('input[name='+formName+']').parent().siblings('.msg').text('').removeAttr('style');
 		}
 		return error;
 	}
 	
-	$.fn.formValidate = function(object)
-	{
+	$.fn.formValidate = function(object){
 		var error = true;
-		
-		
-		$(this).find('input').blur(function()
-		{
+		$(this).find('input').blur(function(){
 			var formName = $(this).attr('name');
 			
 		    eval("var obj = object."+formName);
 			error = $(this).inputValidate(obj);
 		});
-		
 		$(this).find('input').focus(function(){
 			var placeholder = $(this).attr('placeholder');
 			
@@ -109,9 +84,9 @@
 			$(this).find("input").each(function(){
 				var formName = $(this).attr('name');
 				eval("var obj = object."+formName);
+				console.log(obj);
 				error = $(this).inputValidate(obj);
 			});
-			
 			if(error==false)
 			{
 				return false;
@@ -120,3 +95,4 @@
 		})
 	}
 })(jQuery);
+

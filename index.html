@@ -13,19 +13,19 @@
     <ul>
       <li>
         <div>
-          <input class="in_name cnm" name="uname" placeholder="请输入昵称" type="text">
+          <input class="in_name" name="uname" placeholder="请输入昵称" type="text">
         </div>
         <div class="msg"></div>
       </li>
       <li>
         <div>
-          <input class="in_password" name="passwd" placeholder="请输入密码" type="text">
+          <input class="in_password" name="passwd" placeholder="请输入密码" type="password">
         </div>
         <div class="msg"></div>
       </li>
       <li>
         <div>
-          <input class="in_upasswd" name="upasswd" placeholder="请输入确认密码" type="text">
+          <input class="in_upasswd" name="upasswd" placeholder="请输入确认密码" type="password">
         </div>
         <div class="msg"></div>
       </li>
@@ -43,24 +43,23 @@
 </div>
 <script type="text/javascript">
 
-$(function()
-{
+$(function(){
 	$('form').formValidate({
 		uname:[
-			{type:"required",msg:"昵称不能为空"}
+			{rule:"required",msg:"昵称不能为空"}
 		],
 		passwd:[
-			{type:"required",msg:"密码不能为空"},
-			{type:"passwd",msg:"请正确输入密码"}
+			{rule:"required",msg:"密码不能为空"},
+			{rule:"passwd",msg:"请正确输入密码"}
 		],
 		upasswd:[
-			{type:"required",msg:"密码不能为空"},
-			{type:"passwd",msg:"请正确输入密码"},
-			{type:"upasswd",msg:"两次密码不一致"}
+			{rule:"required",msg:"密码不能为空"},
+			{rule:"passwd",msg:"请正确输入密码"},
+			{rule:"passwd",msg:"两次密码不一致",type:'contrast'}
 		],
 		email:[
-			{type:"required",msg:"密码不能为空"},
-			{type:"email",msg:"请正确输入密码"}
+			{rule:"required",msg:"邮箱不能为空"},
+			{rule:"email",msg:"请正确输入密码"}
 		]
 	});
 })
