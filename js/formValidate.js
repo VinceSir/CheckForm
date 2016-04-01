@@ -38,7 +38,9 @@
 						}
 					}
 					if(obj[i].type == 'function'){
-						if(!eval(obj[i].rule+"()")){
+						var active ='';
+						active = eval(obj[i].rule+"()");
+						if(active == false){
 							_error(formName,obj[i].msg);
 							break;
 						}
