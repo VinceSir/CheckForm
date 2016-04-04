@@ -29,6 +29,7 @@
 						break;
 					}
 				}else if(obj[i].type){
+					//验证两个值对比
 					if(obj[i].type == 'contrast'){
 						var active = '';
 						active = contrast(formName,obj[i].rule);
@@ -37,6 +38,7 @@
 							break;
 						}
 					}
+					//验证自定义方法
 					if(obj[i].type == 'function'){
 						var active ='';
 						active = eval(obj[i].rule+"()");
@@ -45,7 +47,18 @@
 							break;
 						}
 					}
+				}else if(obj[i].rule=='optional'){
+					//验证选填内容
+					if($(this).val() == null || $(this).val() == ''){
+					}else{
+						eval("var regularName = regular."+$(this).attr('name'));
+						if(!regularName.test($(this).val())){
+							_error(formName,obj[i].msg);
+							break;
+						}
+					}
 				}else{
+					//默认验证
 					eval("var regularName = regular."+obj[i].rule);
 						if(!regularName.test($(this).val())){
 							_error(formName,obj[i].msg);
@@ -91,7 +104,6 @@
 			$(this).find("input").each(function(){
 				var formName = $(this).attr('name');
 				eval("var obj = object."+formName);
-				console.log(obj);
 				error = $(this).inputValidate(obj);
 			});
 			if(error==false)
