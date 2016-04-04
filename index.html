@@ -66,15 +66,14 @@ $(function(){
 		email:[
 			{rule:"required",msg:"邮箱不能为空"},
 			{rule:"email",msg:"请正确输入密码"},
-            {rule:"alert",msg:'方法未通过',type:'function'}
+            {rule:"alerts",msg:'方法未通过',type:'function'}
 		],
         qq:[
-            {rule:"optional",msg:"请输入正确的QQ账号"},
+            {rule:"optional",msg:"请输入正确的QQ账号"}
         ]
 	});
 
-    function alert(){
-        console.log(true);
+    function alerts(){
         return false;
     }
 })

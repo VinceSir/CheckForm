@@ -50,6 +50,7 @@
 				}else if(obj[i].rule=='optional'){
 					//验证选填内容
 					if($(this).val() == null || $(this).val() == ''){
+						error = false;
 					}else{
 						eval("var regularName = regular."+$(this).attr('name'));
 						if(!regularName.test($(this).val())){
@@ -60,11 +61,10 @@
 				}else{
 					//默认验证
 					eval("var regularName = regular."+obj[i].rule);
-						if(!regularName.test($(this).val())){
-							_error(formName,obj[i].msg);
-							break;
-						}
-
+					if(!regularName.test($(this).val())){
+						_error(formName,obj[i].msg);
+						break;
+					}
 				}
 			}
 		}
