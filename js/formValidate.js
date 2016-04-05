@@ -1,5 +1,6 @@
 // JavaScript Document
 (function($){
+    var errorActive = true;
 	$.fn.inputValidate = function(obj){
 		var regular = {
 			'email':  /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
@@ -18,11 +19,10 @@
 			'qq':/^[1-9]{1}[0-9]{4,10}$/,
 			'idcard':/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
 			'bank_card':/^(\d{16}|\d{19})$/,
-		};
-		var formName = $(this).attr('name');
+		},
+        formName = $(this).attr('name');
 		if(obj){
 			for(var i=0; i<obj.length;i++){
-				error = true;
 				if(obj[i].rule=='required'){
 					if(!$(this).val()){
 						_error(formName,obj[i].msg);
@@ -40,17 +40,21 @@
 					}
 					//验证自定义方法
 					if(obj[i].type == 'function'){
-						var active ='';
-						active = eval(obj[i].rule+"()");
+						var active = eval(obj[i].rule+"()");
 						if(active == false){
 							_error(formName,obj[i].msg);
 							break;
 						}
+
 					}
 				}else if(obj[i].rule=='optional'){
 					//验证选填内容
 					if($(this).val() == null || $(this).val() == ''){
-						error = false;
+                        if(!errorActive){
+                            errorActive = false;
+                        }else{
+                            errorActive = true;
+                        }
 					}else{
 						eval("var regularName = regular."+$(this).attr('name'));
 						if(!regularName.test($(this).val())){
@@ -66,32 +70,31 @@
 						break;
 					}
 				}
-			}
+            }
 		}
 		//对比两个对象的的值是否相同
 		function contrast(a,b){
-			if($('input[name='+ a +']').val()!=$('input[name='+ b +']').val()){
-				return false;
-			}else{
+			if($('input[name='+ a +']').val()==$('input[name='+ b +']').val()){
 				return true;
+			}else{
+				return false;
 			}
 		}
-
 		function _error(formNmae,msg){
-			error = false;
+            errorActive = false;
 			$('input[name='+formNmae+']').parent().siblings('.msg').text(msg).css({'color':'#ff0000'});
 		}
-		if(error){
+
+		if(errorActive){
 			$('input[name='+formName+']').parent().siblings('.msg').text('').removeAttr('style');
 		}
-		return error;
+		return errorActive;
 	}
 	
 	$.fn.formValidate = function(object){
 		var error = true;
 		$(this).find('input').blur(function(){
 			var formName = $(this).attr('name');
-			
 		    eval("var obj = object."+formName);
 			error = $(this).inputValidate(obj);
 		});

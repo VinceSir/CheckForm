@@ -48,7 +48,6 @@
   </form>
 </div>
 <script type="text/javascript">
-
 $(function(){
 	$('form').formValidate({
 		uname:[
@@ -65,18 +64,19 @@ $(function(){
 		],
 		email:[
 			{rule:"required",msg:"邮箱不能为空"},
-			{rule:"email",msg:"请正确输入密码"},
-            {rule:"alerts",msg:'方法未通过',type:'function'}
+			{rule:"email",msg:"请正确输入邮箱"}
+//            {rule:"alerts",msg:'方法未通过',type:'function'}
 		],
         qq:[
             {rule:"optional",msg:"请输入正确的QQ账号"}
         ]
 	});
-
-    function alerts(){
-        return false;
-    }
 })
+function alerts(){
+    alert(1);
+    return false;
+}
 </script>
+
 </body>
 </html>
