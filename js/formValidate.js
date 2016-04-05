@@ -47,21 +47,24 @@
 						}
 
 					}
-				}else if(obj[i].rule=='optional'){
-					//验证选填内容
-					if($(this).val() == null || $(this).val() == ''){
-                        if(!errorActive){
-                            errorActive = false;
-                        }else{
-                            errorActive = true;
-                        }
-					}else{
-						eval("var regularName = regular."+$(this).attr('name'));
-						if(!regularName.test($(this).val())){
-							_error(formName,obj[i].msg);
-							break;
+					if(obj[i].type =='optional'){
+						//验证选填内容
+						if($(this).val() == null || $(this).val() == ''){
+							if(!errorActive){
+								errorActive = false;
+							}else{
+								errorActive = true;
+							}
+						}else{
+							alert($(this).val());
+							eval("var regularName = regular."+$(this).attr('name'));
+							if(!regularName.test($(this).val())){
+								_error(formName,obj[i].msg);
+								break;
+							}
 						}
 					}
+
 				}else{
 					//默认验证
 					eval("var regularName = regular."+obj[i].rule);
