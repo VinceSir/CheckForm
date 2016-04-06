@@ -5,15 +5,21 @@
 		_Object = object;
 		$('input').blur(function()
 		{
-			var inputName = $(this).attr('name'),
-				obj =_Object.rules[inputName],
-				prompt = _Object.info[inputName];
+			var inputName = $(this).attr('name');
+			if(_Object.rules[inputName]){
+				var	obj =_Object.rules[inputName];
+			}
+			if(_Object.info[inputName]){
+				var prompt = _Object.info[inputName];
+			}
 			$return = $.formValidate.inputValidate($(this),obj,prompt);
 		})
 		$('input').focus(function(){
 			eval("var prompt = object.info."+inputName);
 			var inputName = $(this).attr('name');
-			var prompt = object.info[inputName].prompt;
+			if(object.info[inputName]){
+				var prompt = object.info[inputName].prompt;
+			}
 			$.formValidate.checkFocus($(this),prompt);
 		})
 	}
@@ -151,24 +157,16 @@
 		{
 			_this.find("input").each(function(){
 
-				var inputName = $(this).attr('name'),
-					obj =_Object.rules[inputName],
-					prompt = _Object.info[inputName];
+				var inputName = $(this).attr('name');
+				if(_Object.rules[inputName]){
+					var	obj =_Object.rules[inputName];
+				}
+				if(_Object.info[inputName]){
+					var prompt = _Object.info[inputName];
+				}
 				$.formValidate.inputValidate($(this),obj,prompt);
 			});
 			return this._error;
 		}
 	}
 })(jQuery);
-
-/*
- * type:方法目前两个参数，一个对比方法，一个自定义方法
- * 对比方法：contrast
- * 自定义方法：function
- *
- * 调用自定方法：rule属性传入方法名称，并且必须返回是否执行成功：true，false
- *
- * 对比方法：rule属性传入方法名称传入对比值的name，目前必须是input
- * */
-
-
