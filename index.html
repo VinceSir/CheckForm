@@ -1,82 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>校验</title>
-<link rel="stylesheet" href="css/index.css">
-<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
-<script type="text/javascript" src="js/formValidate.js"></script>
+    <meta charset="UTF-8">
+    <title>校验</title>
+    <link rel="stylesheet" href="css/index.css">
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="js/formValidate.js"></script>
 </head>
 <body>
 <div class="center">
-	<form action="" method="post">
-    <ul>
-      <li>
-        <div>
-          <input class="in_name" name="uname" placeholder="请输入昵称"  type="text">
-        </div>
-        <div class="msg"></div>
-      </li>
-      <li>
-        <div>
-          <input class="in_password" name="passwd" placeholder="请输入密码" type="password">
-        </div>
-        <div class="msg"></div>
-      </li>
-      <li>
-        <div>
-          <input class="in_upasswd" name="upasswd" placeholder="请输入确认密码" type="password">
-        </div>
-        <div class="msg"></div>
-      </li>
-      <li>
-        <div>
-          <input class="in_email" name="email" placeholder="请输入邮箱" type="text">
-        </div>
-        <div class="msg"></div>
-      </li>
-        <li>
-            <div>
-                <input class="in_upasswd" name="qq" placeholder="请填写QQ账号" type="text">
-            </div>
-            <div class="msg"></div>
-        </li>
-      <li>
-        <button class="submit" type="submit">提交</button>
-      </li>
-    </ul>
-  </form>
+    <form action="" method="post">
+        <ul>
+            <li>
+                <div>
+                    <input class="in_name" name="uname" placeholder="请输入昵称"  type="text">
+                </div>
+                <div class="msg"></div>
+            </li>
+            <li>
+                <div>
+                    <input class="in_password" name="passwd" placeholder="请输入密码" type="text">
+                </div>
+                <div class="msg"></div>
+            </li>
+            <li>
+                <div>
+                    <input class="in_upasswd" name="upasswd" placeholder="请输入确认密码" type="password">
+                </div>
+                <div class="msg"></div>
+            </li>
+            <li>
+                <div>
+                    <input class="in_email" name="email" placeholder="请输入邮箱" type="text">
+                </div>
+                <div class="msg"></div>
+            </li>
+            <li>
+                <div>
+                    <input class="in_upasswd" name="qq" placeholder="请填写QQ账号" type="text">
+                </div>
+                <div class="msg"></div>
+            </li>
+            <li>
+                <button class="submit" type="button" id="submit">提交</button>
+            </li>
+        </ul>
+    </form>
 </div>
 <script type="text/javascript">
-$(function(){
-	$('form').formValidate({
-		uname:[
-			{rule:"required",msg:"昵称不能为空"}
-		],
-		passwd:[
-			{rule:"required",msg:"密码不能为空"},
-			{rule:"passwd",msg:"请正确输入密码"}
-		],
-		upasswd:[
-			{rule:"required",msg:"密码不能为空"},
-			{rule:"passwd",msg:"请正确输入密码"},
-			{rule:"passwd",msg:"两次密码不一致",type:'contrast'}
-		],
-		email:[
-			{rule:"required",msg:"邮箱不能为空"},
-			{rule:"email",msg:"请正确输入邮箱"}
-//            {rule:"alerts",msg:'方法未通过',type:'function'}
-		],
-        qq:[
-            {rule:"qq",msg:"请输入正确的QQ账号",type:'optional'}
-        ]
-	});
-})
-function alerts(){
-    alert(1);
-    return false;
-}
-</script>
+    $(function(){
+        $('form').formValidate({
+            rules:{
+                uname:[
+                    {type:'required',msg:'昵称不能为空'}
+                ],
+                passwd:[
+                    {type:'required',msg:'密码不能为空'},
+                    {type:'regular',rule:'passwd',msg:'请正确输入密码'}
+                ],
+                upasswd:[
+                    {type:'required',msg:'密码不能为空'},
+                    {type:'regular',rule:'passwd',msg:'请正确输入密码'},
+                    {type:'contrast',rule:'name',msg:'两次密码不一致'}
+                ],
+                email:[
+                    {type:'required',msg:'邮箱不能为空'},
+                    {type:'regular',rule:'email',msg:'请正确输入邮箱'}
+                ],
+                qq:[
+                    {type:'optional',rule:'qq',msg:'选填验证失败'}
+                ]
+            },
+            info:{
+                uname:{ok:'成功',prompt:'请输入2位字符以上的昵称'},
+                passwd:{ok:'成功',prompt:'请输入A-Z和0-9在组合密码'},
+                upasswd:{ok:'成功',prompt:'请输入A-Z和0-9在组合密码'},
+                email:{ok:'成功',prompt:'请输入邮箱'},
+                qq:{ok:'成功',prompt:'提示'}
+            }
+        });
 
+        $('#submit').click(function(){
+            $.formValidate.checkSubmit($('form'));
+            if(!$.formValidate._error)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        })
+    })
+</script>
 </body>
 </html>

@@ -1,8 +1,26 @@
 // JavaScript Document
 (function($){
-    var errorActive = true;
-	$.fn.inputValidate = function(obj){
-		var regular = {
+	var _Object = {};
+	$.fn.formValidate = function(object,reValue){
+		_Object = object;
+		$('input').blur(function()
+		{
+			var inputName = $(this).attr('name'),
+				obj =_Object.rules[inputName],
+				prompt = _Object.info[inputName];
+			$return = $.formValidate.inputValidate($(this),obj,prompt);
+		})
+		$('input').focus(function(){
+			eval("var prompt = object.info."+inputName);
+			var inputName = $(this).attr('name');
+			var prompt = object.info[inputName].prompt;
+			$.formValidate.checkFocus($(this),prompt);
+		})
+	}
+	$.formValidate = {
+		_error:false,
+		thisTS:{},
+		regular:{
 			'email':  /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
 			'url':  /^http(s?):\/\/(?:[A-za-z0-9-]+\.)+[A-za-z]{2,4}(:\d+)?(?:[\/\?#][\/=\?%\-&~`@[\]\':+!\.#\w]*)?$/,
 			'currency':  /^\d+(\.\d+)?$/,
@@ -20,115 +38,137 @@
 			'idcard':/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/,
 			'bank_card':/^(\d{16}|\d{19})$/,
 		},
-        formName = $(this).attr('name');
-		if(obj){
-			for(var i=0; i<obj.length;i++){
-				if(obj[i].rule=='required'){
-					if(!$(this).val()){
-						_error(formName,obj[i].msg);
-						break;
-					}
-				}else if(obj[i].type){
-					//验证两个值对比
-					if(obj[i].type == 'contrast'){
-						var active = '';
-						active = contrast(formName,obj[i].rule);
-						if(!active){
-							_error(formName,obj[i].msg);
+		inputValidate:function(_this,obj,prompt)
+		{
+			this.thisTS = prompt;
+			if(obj){
+				for(var i=0; i<obj.length;i++){
+					switch(obj[i].type)
+					{
+						case 'required':
+							this.checkRequired(_this,obj[i].msg);
 							break;
-						}
-					}
-					//验证自定义方法
-					if(obj[i].type == 'function'){
-						var active = eval(obj[i].rule+"()");
-						if(active == false){
-							_error(formName,obj[i].msg);
+						case 'regular':
+							this.checkRegular(_this,obj[i].rule,obj[i].msg);
+							break
+						case 'function':
+							this.checkFunction(_this,obj[i].rule,obj[i].msg);
 							break;
-						}
-
+						case 'contrast':
+							this.checkContrast(_this,obj[i].rule,obj[i].msg);
+							break;
+						case 'optional':
+							this.checkOptional(_this,obj[i].rule,obj[i].msg);
+							break;
 					}
-					if(obj[i].type =='optional'){
-						//验证选填内容
-						if($(this).val() == null || $(this).val() == ''){
-							if(!errorActive){
-								errorActive = false;
-							}else{
-								errorActive = true;
-							}
-						}else{
-							alert($(this).val());
-							eval("var regularName = regular."+$(this).attr('name'));
-							if(!regularName.test($(this).val())){
-								_error(formName,obj[i].msg);
-								break;
-							}
-						}
-					}
-
-				}else{
-					//默认验证
-					eval("var regularName = regular."+obj[i].rule);
-					if(!regularName.test($(this).val())){
-						_error(formName,obj[i].msg);
+					if(!this._error)
 						break;
-					}
 				}
-            }
-		}
-		//对比两个对象的的值是否相同
-		function contrast(a,b){
-			if($('input[name='+ a +']').val()==$('input[name='+ b +']').val()){
-				return true;
-			}else{
-				return false;
-			}
-		}
-		function _error(formNmae,msg){
-            errorActive = false;
-			$('input[name='+formNmae+']').parent().siblings('.msg').text(msg).css({'color':'#ff0000'});
-		}
 
-		if(errorActive){
-			$('input[name='+formName+']').parent().siblings('.msg').text('').removeAttr('style');
-		}
-		return errorActive;
-	}
-	
-	$.fn.formValidate = function(object){
-		var error = true;
-		$(this).find('input').blur(function(){
-			var formName = $(this).attr('name');
-		    eval("var obj = object."+formName);
-			error = $(this).inputValidate(obj);
-		});
-		$(this).find('input').focus(function(){
-			var placeholder = $(this).attr('placeholder');
-			$(this).parent().siblings('.msg').removeAttr('style').text(placeholder);
-		})
-		
-		$(this).submit(function(){
-			$(this).find("input").each(function(){
-				var formName = $(this).attr('name');
-				eval("var obj = object."+formName);
-				error = $(this).inputValidate(obj);
-			});
-			if(error==false)
-			{
-				return false;
 			}
-			return true;
-		})
+			return this._error;
+		},
+		checkFocus:function(_this,prompt){
+			_this.parent().siblings('.msg').css({color:'#464646'}).text(prompt);
+		},
+		checkRequired:function(_this,errorInfo)
+		{
+			if(!_this.val())
+			{
+				this.error(_this,errorInfo);
+			}
+			else
+			{
+				this.success(_this,this.thisTS.ok);
+			}
+		},
+		checkRegular:function(_this,rule,errorInfo)
+		{
+			eval("var regularName = this.regular."+rule);
+			if(!regularName.test(_this.val()))
+			{
+				this.error(_this,errorInfo);
+			}
+			else
+			{
+				this.success(_this,this.thisTS.ok);
+			}
+		},
+		checkFunction:function(_this,rule,errorInfo)
+		{
+			var a = rule();
+			if(!a)
+			{
+				this.error(_this,errorInfo);
+			}
+			else
+			{
+				this.success(_this,this.thisTS.ok);
+			}
+		},
+		checkContrast:function(_this,rule,errorInfo)
+		{
+			if(typeof rule == "Object"){
+				if(_this.val()!=rule.val())
+				{
+					this.error(_this,errorInfo);
+				}
+				else
+				{
+					this.success(_this,this.thisTS.ok);
+				}
+			}else{
+				return
+			}
+		},
+		checkOptional:function(_this,rule,errorInfo)
+		{
+			if(_this.val())
+			{
+				eval("var regularName = this.regular."+rule);
+				if(!regularName.test(_this.val()))
+				{
+					this.error(_this,errorInfo);
+				}
+				else
+				{
+					this.success(_this,this.thisTS.ok);
+				}
+			}else{
+				_this.parent().siblings('.msg').removeAttr('style').text('');
+			}
+		},
+		error:function(_this,errorMsg)
+		{
+			_this.parent().siblings('.msg').css({color:'red'}).text(errorMsg);
+			this._error = false;
+		},
+		success:function(_this,successMsg){
+			_this.parent().siblings('.msg').css({color:'blue'}).text(successMsg);
+			this._error = true;
+		},
+		checkSubmit:function(_this)
+		{
+			_this.find("input").each(function(){
+
+				var inputName = $(this).attr('name'),
+					obj =_Object.rules[inputName],
+					prompt = _Object.info[inputName];
+				$.formValidate.inputValidate($(this),obj,prompt);
+			});
+			return this._error;
+		}
 	}
 })(jQuery);
 
 /*
-* type:方法目前两个参数，一个对比方法，一个自定义方法
-* 对比方法：contrast
-* 自定义方法：function
-*
-* 调用自定方法：rule属性传入方法名称，并且必须返回是否执行成功：true，false
-*
-* 对比方法：rule属性传入方法名称传入对比值的name，目前必须是input
-* */
+ * type:方法目前两个参数，一个对比方法，一个自定义方法
+ * 对比方法：contrast
+ * 自定义方法：function
+ *
+ * 调用自定方法：rule属性传入方法名称，并且必须返回是否执行成功：true，false
+ *
+ * 对比方法：rule属性传入方法名称传入对比值的name，目前必须是input
+ * */
 
 
