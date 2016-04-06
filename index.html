@@ -61,7 +61,7 @@
                 upasswd:[
                     {type:'required',msg:'密码不能为空'},
                     {type:'regular',rule:'passwd',msg:'请正确输入密码'},
-                    {type:'contrast',rule:'name',msg:'两次密码不一致'}
+                    {type:'contrast',rule:$('.in_password'),msg:'两次密码不一致'}
                 ],
                 email:[
                     {type:'required',msg:'邮箱不能为空'},

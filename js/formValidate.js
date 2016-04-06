@@ -114,7 +114,7 @@
 		},
 		checkContrast:function(_this,rule,errorInfo)
 		{
-			if(typeof rule == "Object"){
+			if(typeof rule == "object" || typeof rule == "Object"){
 				if(_this.val()!=rule.val())
 				{
 					this.error(_this,errorInfo);
