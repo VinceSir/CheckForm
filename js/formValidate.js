@@ -150,7 +150,7 @@
 			this._error = false;
 		},
 		success:function(_this,successMsg){
-			_this.parent().siblings('.msg').css({color:'blue'}).text(successMsg);
+			_this.parent().siblings('.msg').css({color:'#5fd3a3'}).text(successMsg);
 			this._error = true;
 		},
 		checkSubmit:function(_this)
