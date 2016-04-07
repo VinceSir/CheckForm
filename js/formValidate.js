@@ -79,13 +79,27 @@
 		},
 		checkRequired:function(_this,errorInfo)
 		{
-			if(!_this.val())
-			{
-				this.error(_this,errorInfo);
-			}
-			else
-			{
-				this.success(_this,this.thisTS.ok);
+			var formType = _this.get(0).tagName;
+			switch(formType){
+				case 'INPUT':{
+					if(!_this.val()){
+						this.error(_this,errorInfo);
+					}else{
+						if(this.thisTS){
+							this.success(_this,this.thisTS.ok);
+						}
+					}
+					break;
+				}
+				case 'SELECT':{
+					if(_this.find("option:selected").text() == _this.find("option").eq(0).text()){
+						this.error(_this,errorInfo);
+					}else{
+						if(this.thisTS){
+							this.success(_this,this.thisTS.ok);
+						}
+					}
+				}
 			}
 		},
 		checkRegular:function(_this,rule,errorInfo)
