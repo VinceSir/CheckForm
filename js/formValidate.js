@@ -1,4 +1,15 @@
-// JavaScript Document
+/*
+* 作者：Vince.sir
+* 创建于：2016-04-01
+* email:vince.sir@outlook.com
+*
+* 验证类型：
+* 1.checkRequired->非空
+* 2.checkRegular->正则验证
+* 3：checkFunction->自定义方法验证
+* 4.checkContrast->对比验证
+* 5.checkOptional->选填验证
+* */
 (function($){
 	var _Object = {};
 	$.fn.formValidate = function(object,reValue){
@@ -79,14 +90,13 @@
 		},
 		checkRequired:function(_this,errorInfo)
 		{
-			//获取标签
 			var formType = _this.get(0).tagName;
 
 			switch(formType){
 				case 'INPUT':{
 					var inputType = _this.attr('type');
 					console.log(inputType);
-					if(inputType == 'text' || inputType == 'password'){     //验证text 和 password
+					if(inputType == 'text' || inputType == 'password'){
 						if(!_this.val()){
 							this.error(_this,errorInfo);
 						}else{
@@ -94,7 +104,7 @@
 								this.success(_this,this.thisTS.ok);
 							}
 						}
-					}else if(inputType == "checkbox"){          //验证checkbox
+					}else if(inputType == "checkbox"){
 						if(!_this.attr('checked')){
                             this.error(_this,errorInfo);
                         }else{
