@@ -84,13 +84,23 @@
 
 			switch(formType){
 				case 'INPUT':{
-					var inputType = _this.attr(type);
-
-					if(!_this.val()){
-						this.error(_this,errorInfo);
-					}else{
-						if(this.thisTS){
-							this.success(_this,this.thisTS.ok);
+					var inputType = _this.attr('type');
+					console.log(inputType);
+					if(inputType == 'text' || inputType == 'password'){     //验证text 和 password
+						if(!_this.val()){
+							this.error(_this,errorInfo);
+						}else{
+							if(this.thisTS){
+								this.success(_this,this.thisTS.ok);
+							}
+						}
+					}else if(inputType == "checkbox"){          //验证checkbox
+						if(!_this.attr('checked')){
+                            this.error(_this,errorInfo);
+                        }else{
+                            if(this.thisTS){
+                                this.success(_this,this.thisTS.ok);
+                            }
 						}
 					}
 					break;
