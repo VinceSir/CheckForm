@@ -79,9 +79,13 @@
 		},
 		checkRequired:function(_this,errorInfo)
 		{
+			//获取标签
 			var formType = _this.get(0).tagName;
+
 			switch(formType){
 				case 'INPUT':{
+					var inputType = _this.attr(type);
+
 					if(!_this.val()){
 						this.error(_this,errorInfo);
 					}else{
@@ -111,7 +115,9 @@
 			}
 			else
 			{
-				this.success(_this,this.thisTS.ok);
+				if(this.thisTS){
+					this.success(_this,this.thisTS.ok);
+				}
 			}
 		},
 		checkFunction:function(_this,rule,errorInfo)
@@ -123,7 +129,9 @@
 			}
 			else
 			{
-				this.success(_this,this.thisTS.ok);
+				if(this.thisTS){
+					this.success(_this,this.thisTS.ok);
+				}
 			}
 		},
 		checkContrast:function(_this,rule,errorInfo)
@@ -135,7 +143,9 @@
 				}
 				else
 				{
-					this.success(_this,this.thisTS.ok);
+					if(this.thisTS){
+						this.success(_this,this.thisTS.ok);
+					}
 				}
 			}else{
 				return
@@ -152,7 +162,9 @@
 				}
 				else
 				{
-					this.success(_this,this.thisTS.ok);
+					if(this.thisTS){
+						this.success(_this,this.thisTS.ok);
+					}
 				}
 			}else{
 				_this.parent().siblings('.msg').removeAttr('style').text('');
