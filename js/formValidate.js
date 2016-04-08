@@ -3,12 +3,21 @@
 * 创建于：2016-04-01
 * email:vince.sir@outlook.com
 *
-* 验证类型：
+* 调用方式:
+* $(formID).formValidate(验证对象{rules:{表单元素Name:[{type:'验证类型',msg:'error文本',rule:'验证规则'}]},info:{表单元素Name:{ok:'成功提示文本',prompt:'鼠标触发元素焦点提示文本'}}})
+* type类型：
 * 1.checkRequired->非空
 * 2.checkRegular->正则验证
 * 3：checkFunction->自定义方法验证
 * 4.checkContrast->对比验证
 * 5.checkOptional->选填验证
+*
+*rule规则：
+* type:'checkRequired'，则不需要传递参数
+* type:'checkRegular'，rule传递验证规则
+* type:'checkFunction'，rule传递自定义方法，返回　true和false
+* type:'checkContrast'，rule传入对比元素id
+* type:'checkOptional'，rule传递验证规则
 * */
 (function($){
 	var _Object = {};
@@ -95,7 +104,6 @@
 			switch(formType){
 				case 'INPUT':{
 					var inputType = _this.attr('type');
-					console.log(inputType);
 					if(inputType == 'text' || inputType == 'password'){
 						if(!_this.val()){
 							this.error(_this,errorInfo);
