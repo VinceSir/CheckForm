@@ -90,12 +90,8 @@
 					if(!this._error)
 						break;
 				}
-
 			}
 			return this._error;
-		},
-		checkFocus:function(_this,prompt){
-			_this.parent().siblings('.msg').css({color:'#464646'}).text(prompt);
 		},
 		checkRequired:function(_this,errorInfo)
 		{
@@ -183,6 +179,8 @@
 		{
 			if(_this.val())
 			{
+
+                this.checkRegular()
 				eval("var regularName = this.regular."+rule);
 				if(!regularName.test(_this.val()))
 				{
@@ -200,12 +198,42 @@
 		},
 		error:function(_this,errorMsg)
 		{
-			_this.parent().siblings('.msg').css({color:'red'}).text(errorMsg);
+			var activeClassName = 'error';
+			this.activeClassName(_this,errorMsg,activeClassName);
 			this._error = false;
 		},
 		success:function(_this,successMsg){
-			_this.parent().siblings('.msg').css({color:'#5fd3a3'}).text(successMsg);
+			var activeClassName = 'success';
+			this.activeClassName(_this,successMsg,activeClassName);
 			this._error = true;
+		},
+		checkFocus:function(_this,promptMsg){
+			var activeClassName = 'prompt';
+			this.activeClassName(_this,promptMsg,activeClassName);
+		},
+		activeClassName:function (_this,msgText,activeClassName) {
+			switch(activeClassName){
+				case 'success':
+					addActive('error','prompt')
+					_this.parent().siblings('.msg').addClass(activeClassName).text(msgText);
+					break;
+				case 'error':
+					addActive('success','prompt')
+					_this.parent().siblings('.msg').addClass(activeClassName).text(msgText);
+					break;
+				case 'prompt':
+					addActive('success','error')
+					break;
+			}
+			function addActive(a,b) {
+				if(_this.parent().siblings('.msg').hasClass(a)){
+					_this.parent().siblings('.msg').removeClass(a);
+				}
+				if(_this.parent().siblings('.msg').hasClass(b)){
+					_this.parent().siblings('.msg').removeClass(b);
+				}
+				_this.parent().siblings('.msg').addClass(activeClassName).text(msgText);
+			}
 		},
 		checkSubmit:function(_this)
 		{
