@@ -31,8 +31,8 @@
 			}
 			if(_Object.info[inputName]){
 				var prompt = _Object.info[inputName];
+				$return = $.formValidate.inputValidate($(this),obj,prompt);
 			}
-			$return = $.formValidate.inputValidate($(this),obj,prompt);
 		});
 
 		_this.find('*').focus(function(){
@@ -40,8 +40,8 @@
 			var inputName = $(this).attr('name');
 			if(object.info[inputName]){
 				var prompt = object.info[inputName].prompt;
+				$.formValidate.checkFocus($(this),prompt);
 			}
-			$.formValidate.checkFocus($(this),prompt);
 		})
 	}
 	$.formValidate = {
