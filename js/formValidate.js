@@ -23,8 +23,8 @@
 	var _Object = {};
 	$.fn.formValidate = function(object,reValue){
 		_Object = object;
-		$('input').blur(function()
-		{
+		var _this = $(this);
+		_this.find('*').blur(function(){
 			var inputName = $(this).attr('name');
 			if(_Object.rules[inputName]){
 				var	obj =_Object.rules[inputName];
@@ -33,8 +33,9 @@
 				var prompt = _Object.info[inputName];
 			}
 			$return = $.formValidate.inputValidate($(this),obj,prompt);
-		})
-		$('input').focus(function(){
+		});
+
+		_this.find('*').focus(function(){
 			eval("var prompt = object.info."+inputName);
 			var inputName = $(this).attr('name');
 			if(object.info[inputName]){
